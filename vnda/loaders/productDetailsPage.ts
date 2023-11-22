@@ -2,7 +2,7 @@ import type { ProductDetailsPage } from "../../commerce/types.ts";
 import { STALE } from "../../utils/fetch.ts";
 import type { RequestURLParam } from "../../website/functions/requestToParam.ts";
 import { AppContext } from "../mod.ts";
-import { parseSlug, toProduct, addVideoToProduct } from "../utils/transform.ts";
+import { addVideoToProduct, parseSlug, toProduct } from "../utils/transform.ts";
 
 export interface Props {
   slug: RequestURLParam;
@@ -32,24 +32,22 @@ async function loader(
   }, STALE)
     .then((r) => r.json()).catch(() => null);
 
-    
-    // 404: product not found
-    if (!maybeProduct) {
-      return null;
-    }
-    
-    const videos = await api["GET /api/v2/products/:id/videos"]({
-      id,
-    }, STALE).then((r) => r.json()).catch(() => null);
+  // 404: product not found
+  if (!maybeProduct) {
+    return null;
+  }
 
-    
-    const product = toProduct(maybeProduct, variantId, {
-      url,
-      priceCurrency: "BRL",
-    });
+  const videos = await api["GET /api/v2/products/:id/videos"]({
+    id,
+  }, STALE).then((r) => r.json()).catch(() => null);
 
-    const productWithVideos = addVideoToProduct(product, videos)
-    
+  const product = toProduct(maybeProduct, variantId, {
+    url,
+    priceCurrency: "BRL",
+  });
+
+  const productWithVideos = addVideoToProduct(product, videos);
+
   const segments = url.pathname.slice(1).split("/");
 
   return {

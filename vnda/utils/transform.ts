@@ -185,11 +185,17 @@ const toPropertyValueTags = (tags: ProductSearch["tags"]): PropertyValue[] =>
     } as PropertyValue)
   );
 
-  const toPropertyValueVideo = (video: any): PropertyValue[] => video?.map(({url, embed_url, thumbnail_url}) => ({
-  "@type": "PropertyValue",
-  "name": "Video", 
-  value: JSON.stringify({contentUrl: url, thumbnailUrl: thumbnail_url,  embedUrl: embed_url, "@type": "VideoObject"},
-  )} as PropertyValue) )
+const toPropertyValueVideo = (video: any): PropertyValue[] =>
+  video?.map(({ url, embed_url, thumbnail_url }) => ({
+    "@type": "PropertyValue",
+    "name": "Video",
+    value: JSON.stringify({
+      contentUrl: url,
+      thumbnailUrl: thumbnail_url,
+      embedUrl: embed_url,
+      "@type": "VideoObject",
+    }),
+  } as PropertyValue));
 
 // deno-lint-ignore no-explicit-any
 const isProductVariant = (p: any): p is VariantProductSearch =>
@@ -412,4 +418,10 @@ export const typeTagExtractor = (url: URL, tags: { type?: string }[]) => {
   };
 };
 
-export const addVideoToProduct = (product: Product, video: any): Product => ({...product, additionalProperty: [...(product.additionalProperty ?? []), ...toPropertyValueVideo(video)] })
+export const addVideoToProduct = (product: Product, video: any): Product => ({
+  ...product,
+  additionalProperty: [
+    ...(product.additionalProperty ?? []),
+    ...toPropertyValueVideo(video),
+  ],
+});
