@@ -37,8 +37,8 @@ async function loader(
     return null;
   }
 
-  const videos = await api["GET /api/v2/products/:id/videos"]({
-    id,
+  const videos = await api["GET /api/v2/products/:productId/videos"]({
+    productId: id,
   }, STALE).then((r) => r.json()).catch(() => null);
 
   const product = toProduct(maybeProduct, variantId, {

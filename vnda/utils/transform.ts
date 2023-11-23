@@ -185,7 +185,9 @@ const toPropertyValueTags = (tags: ProductSearch["tags"]): PropertyValue[] =>
     } as PropertyValue)
   );
 
-const toPropertyValueVideo = (video: any): PropertyValue[] =>
+const toPropertyValueVideo = (
+  video: OpenAPI["GET /api/v2/products/:productId/videos"]["response"],
+): PropertyValue[] =>
   video?.map(({ url, embed_url, thumbnail_url }) => ({
     "@type": "PropertyValue",
     "name": "Video",
@@ -418,10 +420,13 @@ export const typeTagExtractor = (url: URL, tags: { type?: string }[]) => {
   };
 };
 
-export const addVideoToProduct = (product: Product, video: any): Product => ({
+export const addVideoToProduct = (
+  product: Product,
+  video: OpenAPI["GET /api/v2/products/:productId/videos"]["response"] | null,
+): Product => ({
   ...product,
   additionalProperty: [
     ...(product.additionalProperty ?? []),
-    ...toPropertyValueVideo(video),
+    ...(video ? toPropertyValueVideo(video) : []),
   ],
 });
