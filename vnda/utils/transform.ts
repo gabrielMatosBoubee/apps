@@ -5,6 +5,7 @@ import {
   PropertyValue,
   Seo,
   UnitPriceSpecification,
+  ImageObject
 } from "../../commerce/types.ts";
 import { ProductGroup, SEO } from "./client/types.ts";
 import {
@@ -185,19 +186,16 @@ const toPropertyValueTags = (tags: ProductSearch["tags"]): PropertyValue[] =>
     } as PropertyValue)
   );
 
-const toPropertyValueVideo = (
+const toImageObjectVideo = (
   video: OpenAPI["GET /api/v2/products/:productId/videos"]["response"],
-): PropertyValue[] =>
+): ImageObject[] =>
   video?.map(({ url, embed_url, thumbnail_url }) => ({
-    "@type": "PropertyValue",
-    "name": "Video",
-    value: JSON.stringify({
-      contentUrl: url,
-      thumbnailUrl: thumbnail_url,
-      embedUrl: embed_url,
-      "@type": "VideoObject",
-    }),
-  } as PropertyValue));
+    "@type": "ImageObject",
+    encodingFormat: "video",
+    contentUrl: url,
+    thumbnailUrl: thumbnail_url,
+    embedUrl: embed_url,
+  } as ImageObject));
 
 // deno-lint-ignore no-explicit-any
 const isProductVariant = (p: any): p is VariantProductSearch =>
@@ -261,12 +259,14 @@ export const toProduct = (
     image: product.images?.length ?? 0 > 1
       ? product.images?.map((img) => ({
         "@type": "ImageObject" as const,
+        encodingFormat: "image",
         alternateName: `${img.url}`,
         url: toURL(img.url!),
       }))
       : [
         {
           "@type": "ImageObject",
+          encodingFormat: "image",
           alternateName: product.name ?? "",
           url: toURL(product.image_url ?? ""),
         },
@@ -425,8 +425,5 @@ export const addVideoToProduct = (
   video: OpenAPI["GET /api/v2/products/:productId/videos"]["response"] | null,
 ): Product => ({
   ...product,
-  additionalProperty: [
-    ...(product.additionalProperty ?? []),
-    ...(video ? toPropertyValueVideo(video) : []),
-  ],
+  image: [...(product?.image ?? []), ...(video ? toImageObjectVideo(video) : [])],
 });
