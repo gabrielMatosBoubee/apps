@@ -1,11 +1,11 @@
 import {
   Filter,
+  ImageObject,
   Offer,
   Product,
   PropertyValue,
   Seo,
   UnitPriceSpecification,
-  ImageObject
 } from "../../commerce/types.ts";
 import { ProductGroup, SEO } from "./client/types.ts";
 import {
@@ -425,5 +425,8 @@ export const addVideoToProduct = (
   video: OpenAPI["GET /api/v2/products/:productId/videos"]["response"] | null,
 ): Product => ({
   ...product,
-  image: [...(product?.image ?? []), ...(video ? toImageObjectVideo(video) : [])],
+  image: [
+    ...(product?.image ?? []),
+    ...(video ? toImageObjectVideo(video) : []),
+  ],
 });
