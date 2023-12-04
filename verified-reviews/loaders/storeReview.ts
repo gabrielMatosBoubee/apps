@@ -5,7 +5,7 @@ import { createClient } from "../utils/client.ts";
 
 export type Props = {
   /**
-   * @title Number of reviews 
+   * @title Number of reviews
    */
   limit: number;
 };
@@ -31,7 +31,7 @@ export default async function storeReview(
   }
 
   let formatReviews: Review[];
-  
+
   formatReviews = reviews.map((item) => ({
     "@type": "Review",
     author: [
@@ -46,7 +46,7 @@ export default async function storeReview(
       "@type": "AggregateRating",
       ratingValue: Number(item.rate),
     },
-  }))
+  }));
 
   const limitedReviews = formatReviews.slice(0, _config.limit);
 
