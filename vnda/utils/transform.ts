@@ -1,5 +1,6 @@
 import {
   Filter,
+  ImageObject,
   Offer,
   Product,
   PropertyValue,
@@ -185,6 +186,17 @@ const toPropertyValueTags = (tags: ProductSearch["tags"]): PropertyValue[] =>
     } as PropertyValue)
   );
 
+const toImageObjectVideo = (
+  video: OpenAPI["GET /api/v2/products/:productId/videos"]["response"],
+): ImageObject[] =>
+  video?.map(({ url, embed_url, thumbnail_url }) => ({
+    "@type": "ImageObject",
+    encodingFormat: "video",
+    contentUrl: url,
+    thumbnailUrl: thumbnail_url,
+    embedUrl: embed_url,
+  } as ImageObject));
+
 // deno-lint-ignore no-explicit-any
 const isProductVariant = (p: any): p is VariantProductSearch =>
   typeof p.id === "number";
@@ -247,12 +259,14 @@ export const toProduct = (
     image: product.images?.length ?? 0 > 1
       ? product.images?.map((img) => ({
         "@type": "ImageObject" as const,
+        encodingFormat: "image",
         alternateName: `${img.url}`,
         url: toURL(img.url!),
       }))
       : [
         {
           "@type": "ImageObject",
+          encodingFormat: "image",
           alternateName: product.name ?? "",
           url: toURL(product.image_url ?? ""),
         },
@@ -405,3 +419,14 @@ export const typeTagExtractor = (url: URL, tags: { type?: string }[]) => {
     cleanUrl,
   };
 };
+
+export const addVideoToProduct = (
+  product: Product,
+  video: OpenAPI["GET /api/v2/products/:productId/videos"]["response"] | null,
+): Product => ({
+  ...product,
+  image: [
+    ...(product?.image ?? []),
+    ...(video ? toImageObjectVideo(video) : []),
+  ],
+});
