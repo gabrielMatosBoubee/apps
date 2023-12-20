@@ -72,6 +72,7 @@ export interface Props {
    * @default 'manual'
    */
   redirect?: "manual" | "follow";
+  avoidAppendPath?: boolean;
 }
 
 /**
@@ -81,6 +82,7 @@ export interface Props {
 export default function Proxy({
   url: rawProxyUrl,
   basePath,
+  avoidAppendPath,
   host: hostToUse,
   customHeaders = [],
   includeScriptsToHead,
@@ -95,7 +97,7 @@ export default function Proxy({
       : url.pathname;
 
     const to = new URL(
-      `${proxyUrl}${sanitize(path)}?${qs}`,
+      `${proxyUrl}${avoidAppendPath ? "" : sanitize(path)}?${qs}`,
     );
 
     const headers = new Headers(req.headers);
