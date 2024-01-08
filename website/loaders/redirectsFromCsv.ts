@@ -54,10 +54,12 @@ const getRedirectFromFile = async (from: string) => {
         parts.splice(typeRowIndex, 1);
       }
 
-      const _last = parts[parts.length - 1];
       parts.splice(parts.length - 1, 1);
-
-      return parts;
+      return [
+        parts[0],
+        parts[1],
+        "permanent",
+      ];;
     })
     .filter(([from, to]) => from && to && from !== to)
     .map(([from, to, type]) => ({
