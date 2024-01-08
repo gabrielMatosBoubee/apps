@@ -48,20 +48,16 @@ const getRedirectFromFile = async (from: string) => {
         REDIRECT_TYPE_ENUM.includes(part)
       );
 
-      const type = (parts[typeRowIndex] as Redirect["type"]) ?? "temporary";
+      const _type = (parts[typeRowIndex] as Redirect["type"]) ?? "temporary";
 
       if (typeRowIndex !== -1) {
         parts.splice(typeRowIndex, 1);
       }
 
-      const last = parts[parts.length - 1];
+      const _last = parts[parts.length - 1];
       parts.splice(parts.length - 1, 1);
 
-      return [
-        removeTrailingSlash(parts.join(",").replaceAll('"', "")),
-        removeTrailingSlash(last.replaceAll('"', "")),
-        type,
-      ];
+      return parts;
     })
     .filter(([from, to]) => from && to && from !== to)
     .map(([from, to, type]) => ({
