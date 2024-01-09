@@ -66,7 +66,9 @@ function loader(
       value: {
         __resolveType: "website/handlers/proxy.ts",
         avoidAppendPath: pathTemplate === "/sitemap.xml",
-        url: pathTemplate === "/sitemap.xml" ?  `https://sitemap.vnda.com.br/preview/${publicUrl}` : internalDomain,
+        url: pathTemplate === "/sitemap.xml"
+          ? `https://sitemap.vnda.com.br/preview/${publicUrl}`
+          : internalDomain,
         host: url.hostname,
         customHeaders,
       },
