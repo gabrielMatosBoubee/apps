@@ -173,7 +173,7 @@ const searchLoader = async (
 
   const tag = categories.at(-1)
 
-  const seo = await api["GET /api/v2/seo_data"]({ resource_type: "Tag", code: tag.name}, STALE).then((res) => res.json())
+  const seo = await api["GET /api/v2/seo_data"]({ resource_type: "Tag", code: tag?.name}, STALE).then((res) => res.json())
   .catch(() => undefined)
 
   return {
