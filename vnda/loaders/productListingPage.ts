@@ -143,6 +143,8 @@ const searchLoader = async (
     ),
   }, STALE);
 
+  // console.log(props.term, props.slug, qQueryString,  url.pathname.slice(1))
+
   const pagination = JSON.parse(
     response.headers.get("x-pagination") ?? "null",
   ) as ProductSearchResult["pagination"] | null;
@@ -169,9 +171,14 @@ const searchLoader = async (
     previousPage.set("page", (page - 1).toString());
   }
 
+  const tag = categories.at(-1)
+
+  const seo = await api["GET /api/v2/seo_data"]({ resource_type: "Tag", code: tag.name}, STALE).then((res) => res.json())
+  .catch(() => undefined)
+
   return {
     "@type": "ProductListingPage",
-    seo: isSearchPage ? undefined : getSEOFromTag(categories, url),
+    seo: isSearchPage ? undefined : getSEOFromTag(categories, url, seo.at(-1)),
     breadcrumb: isSearchPage
       ? {
         "@type": "BreadcrumbList",
