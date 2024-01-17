@@ -59,7 +59,7 @@ const getRedirectFromFile = async (from: string) => {
         parts[0],
         parts[1],
         "permanent",
-      ];;
+      ];
     })
     .filter(([from, to]) => from && to && from !== to)
     .map(([from, to, type]) => ({

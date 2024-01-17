@@ -128,7 +128,9 @@ const searchLoader = async (
     : undefined;
 
   // TODO: Ensure continued functionality for pages like s?q=, and verify that search functionality works with paths like /example.
-  const preference = (categoryTagsToFilter ? term : qQueryString ?? url.pathname.slice(1));
+  const preference = categoryTagsToFilter
+    ? term
+    : qQueryString ?? url.pathname.slice(1);
 
   const response = await api["GET /api/v2/products/search"]({
     term: term ?? preference,
@@ -157,9 +159,8 @@ const searchLoader = async (
         },
         [],
       ),
-    )
+    ),
   }, STALE);
-
 
   const pagination = JSON.parse(
     response.headers.get("x-pagination") ?? "null",
@@ -187,14 +188,19 @@ const searchLoader = async (
     previousPage.set("page", (page - 1).toString());
   }
 
-  const tag = categories.at(-1)
+  const tag = categories.at(-1);
 
-  const seo = await api["GET /api/v2/seo_data"]({ resource_type: "Tag", code: tag?.name}, STALE).then((res) => res.json())
-  .catch(() => undefined)
+  const seo = await api["GET /api/v2/seo_data"]({
+    resource_type: "Tag",
+    code: tag?.name,
+  }, STALE).then((res) => res.json())
+    .catch(() => undefined);
 
   return {
     "@type": "ProductListingPage",
-    seo: isSearchPage ? undefined : getSEOFromTag(categories, url, seo.at(-1)),
+    seo: isSearchPage
+      ? undefined
+      : getSEOFromTag(categories, url, (seo ?? []).at(-1)),
     breadcrumb: isSearchPage
       ? {
         "@type": "BreadcrumbList",

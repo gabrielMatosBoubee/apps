@@ -44,10 +44,13 @@ async function loader(
 
   const segments = url.pathname.slice(1).split("/");
 
-  const seoArray = await api["GET /api/v2/seo_data"]({ resource_type: "Product", resource_id: product.isVariantOf?.productGroupID}, STALE).then((res) => res.json())
-  .catch(() => undefined)
+  const seoArray = await api["GET /api/v2/seo_data"]({
+    resource_type: "Product",
+    resource_id: product.isVariantOf?.productGroupID,
+  }, STALE).then((res) => res.json())
+    .catch(() => undefined);
 
-  const seo = seoArray.at(-1)
+  const seo = seoArray.at(-1);
 
   return {
     "@type": "ProductDetailsPage",

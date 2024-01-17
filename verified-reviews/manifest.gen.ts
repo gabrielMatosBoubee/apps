@@ -5,11 +5,13 @@
 import * as $$$0 from "./loaders/storeReview.ts";
 import * as $$$1 from "./loaders/productDetailsPage.ts";
 import * as $$$2 from "./loaders/productList.ts";
+import * as $$$3 from "./loaders/productListingPage.ts";
 
 const manifest = {
   "loaders": {
     "verified-reviews/loaders/productDetailsPage.ts": $$$1,
     "verified-reviews/loaders/productList.ts": $$$2,
+    "verified-reviews/loaders/productListingPage.ts": $$$3,
     "verified-reviews/loaders/storeReview.ts": $$$0,
   },
   "name": "verified-reviews",
