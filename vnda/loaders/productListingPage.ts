@@ -89,9 +89,7 @@ const searchLoader = async (
   const properties2 = url.searchParams.getAll("type_tags[property2][]");
   const properties3 = url.searchParams.getAll("type_tags[property3][]");
 
-  const categoryTagNames = Object.values(
-    Object.fromEntries(url.searchParams.entries()),
-  );
+  const categoryTagNames = Array.from(url.searchParams.values());
 
   const tags = await Promise.all([
     ...categoryTagNames,
@@ -113,9 +111,6 @@ const searchLoader = async (
   const filteredTags = tags
     .filter((tag): tag is Tag => typeof tag !== "undefined");
 
-  const resolvedTagNames = filteredTags
-    .map((t) => t.name)
-    .filter((name): name is string => typeof name === "string");
 
   const { cleanUrl, typeTags } = typeTagExtractor(url, filteredTags);
 
@@ -124,7 +119,9 @@ const searchLoader = async (
     : undefined;
 
   const categoryTagsToFilter = categories.length > 0 && props.filterByTags
-    ? resolvedTagNames
+    ? categories
+    .map((t) => t.name)
+    .filter((name): name is string => typeof name === "string")
     : undefined;
 
   // TODO: Ensure continued functionality for pages like s?q=, and verify that search functionality works with paths like /example.
