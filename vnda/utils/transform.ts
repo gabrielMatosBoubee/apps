@@ -302,10 +302,7 @@ const removeFilter = (
   typeTagsInUse: { key: string; value: string }[],
   filter: { key: string; value: string },
 ) =>
-  typeTagsInUse.filter((inUse) =>
-    inUse.key !== filter.key ||
-    inUse.value !== filter.value
-  );
+  typeTagsInUse.filter((inUse) =>!(inUse.key === filter.key && inUse.value === filter.value));
 
 export const toFilters = (
   aggregations:
