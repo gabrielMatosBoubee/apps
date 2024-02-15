@@ -78,9 +78,8 @@ export const createClient = (params: ConfigVerifiedReviews | undefined) => {
       if (context.isDeploy) {
         console.error(MessageError.ratings, error);
       } else {
-        console.log(`${MessageError.ratings} - ${error}`)
-        return undefined
-        
+        console.log(`${MessageError.ratings} - ${error}`);
+        return undefined;
       }
       return undefined;
     }

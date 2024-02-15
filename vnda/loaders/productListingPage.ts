@@ -47,8 +47,8 @@ export interface Props {
   filterByTags?: boolean;
   filterOperator?: "and" | "or";
 
-   /** @description Here is to put the pathname of the Search Page. Ex: /s. We have default values: "/busca" or "/s" */
-   searchPagePath?: string;
+  /** @description Here is to put the pathname of the Search Page. Ex: /s. We have default values: "/busca" or "/s" */
+  searchPagePath?: string;
 }
 
 const getBreadcrumbList = (categories: Tag[], url: URL): BreadcrumbList => ({
@@ -79,7 +79,8 @@ const searchLoader = async (
   const sort = url.searchParams.get("sort") as Sort;
   const page = Number(url.searchParams.get("page")) || 1;
 
-  const isSearchPage = url.pathname === "/busca" || url.pathname === "/s" || url.pathname === props.searchPagePath;
+  const isSearchPage = url.pathname === "/busca" || url.pathname === "/s" ||
+    url.pathname === props.searchPagePath;
   const qQueryString = url.searchParams.get("q");
   const term = props.term || props.slug || qQueryString ||
     undefined;
@@ -114,7 +115,6 @@ const searchLoader = async (
   const filteredTags = tags
     .filter((tag): tag is Tag => typeof tag !== "undefined");
 
-
   const { cleanUrl, typeTags } = typeTagExtractor(url, filteredTags);
 
   const initialTags = props.tags && props.tags?.length > 0
@@ -123,8 +123,8 @@ const searchLoader = async (
 
   const categoryTagsToFilter = categories.length > 0 && props.filterByTags
     ? categories
-    .map((t) => t.name)
-    .filter((name): name is string => typeof name === "string")
+      .map((t) => t.name)
+      .filter((name): name is string => typeof name === "string")
     : undefined;
 
   // TODO: Ensure continued functionality for pages like s?q=, and verify that search functionality works with paths like /example.
