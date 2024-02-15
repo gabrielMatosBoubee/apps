@@ -46,6 +46,9 @@ export interface Props {
 
   filterByTags?: boolean;
   filterOperator?: "and" | "or";
+
+   /** @description Here is to put the pathname of the Search Page. Ex: /s. We have default values: "/busca" or "/s" */
+   searchPagePath?: string;
 }
 
 const getBreadcrumbList = (categories: Tag[], url: URL): BreadcrumbList => ({
@@ -76,7 +79,7 @@ const searchLoader = async (
   const sort = url.searchParams.get("sort") as Sort;
   const page = Number(url.searchParams.get("page")) || 1;
 
-  const isSearchPage = url.pathname === "/busca";
+  const isSearchPage = url.pathname === "/busca" || url.pathname === "/s" || url.pathname === props.searchPagePath;
   const qQueryString = url.searchParams.get("q");
   const term = props.term || props.slug || qQueryString ||
     undefined;
