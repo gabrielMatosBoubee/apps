@@ -100,6 +100,9 @@ const searchLoader = async (
   const url = new URL(props.pageHref || req.url);
   const { api } = ctx;
 
+  const priceFilterRegex = /de-(\d+)-a-(\d+)/;
+  const filterMatch = url.href.match(priceFilterRegex) ?? []
+
   const count = props.count ?? 12;
   const sort = url.searchParams.get("sort") as Sort;
   const page = Number(url.searchParams.get("page")) || 1;
@@ -166,6 +169,8 @@ const searchLoader = async (
       per_page: count,
       "tags[]": initialTags ?? categoryTagsToFilter,
       wildcard: true,
+      ...(filterMatch[1] && {min_price: Number(filterMatch[1])} ),
+      ...(filterMatch[2] && {max_price: Number(filterMatch[2])} ),
       "property1_values[]": properties1,
       "property2_values[]": properties2,
       "property3_values[]": properties3,
