@@ -74,6 +74,7 @@ export interface Props {
 }
 
 export const loader = (props: Props, req: Request, _ctx: AppContext) => {
+  console.log(req)
   return { ...props, isBot: req.headers.get("X-Page-Speed") }
 }
 
