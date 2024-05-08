@@ -3,6 +3,8 @@ import Script from "partytown/Script.tsx";
 import GoogleTagScript from "partytown/integrations/GTAG.tsx";
 import GoogleTagManager from "partytown/integrations/GTM.tsx";
 import { scriptAsDataURI } from "../../utils/dataURI.ts";
+import { AppContext } from "../mod.ts";
+import { isBot } from "deco/utils/userAgent.ts";
 
 /**
  * This function handles all ecommerce analytics events.
@@ -71,6 +73,10 @@ export interface Props {
   disableAutomaticEventPush?: boolean;
 }
 
+export const loader = (props: Props, req: Request, _ctx: AppContext) => {
+  return { ...props, isBot: isBot(req) }
+}
+
 export default function Analytics({
   trackingIds,
   src,
@@ -78,14 +84,15 @@ export default function Analytics({
   googleAnalyticsIds,
   preventForward,
   disableAutomaticEventPush,
-}: Props) {
+  isBot
+}: ReturnType<typeof loader>) {
   const isDeploy = !!context.isDeploy;
 
   return (
     <>
       {/* TODO: Add debug from query string @author Igor Brasileiro */}
       {/* Add Tag Manager script during production only. To test it locally remove the condition */}
-      {isDeploy &&
+      {!isBot && isDeploy &&
         trackingIds &&
         trackingIds.map((trackingId) => (
           <GoogleTagManager
@@ -103,7 +110,7 @@ export default function Analytics({
             preventForward={preventForward}
           />
         ))}
-      {isDeploy && src && (
+      {!isBot && isDeploy && src && (
         <GoogleTagManager
           src={src}
           dangerouslyRunOnMainThread={dangerouslyRunOnMainThread}
