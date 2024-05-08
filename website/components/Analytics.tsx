@@ -74,7 +74,7 @@ export interface Props {
 }
 
 export const loader = (props: Props, req: Request, _ctx: AppContext) => {
-  return { ...props, isBot: isBot(req) }
+  return { ...props, isBot: req.headers.get("X-Page-Speed") }
 }
 
 export default function Analytics({
